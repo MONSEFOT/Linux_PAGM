@@ -6,6 +6,17 @@ class ApiURLs{
     "username": "<email|slug>",
     "password": "<password>" ,// RFC3986 URl encoded string
   };
+
+  Map<String , String> auth0_refreshing_body = {
+    "grant_type" : "refresh_token",
+    "refresh_token" : "<refresh_token>",
+  };
+
+  String get_anime_url= "https://kitsu.io/api/anime";
+
+  Map<String , String> get_anime_body = {
+    "filter[categories]" : "<categories>" ,// RFC3986 URl encoded string
+  };
   
 
 }
