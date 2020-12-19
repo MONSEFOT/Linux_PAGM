@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:linux_pagm/Screens/sign_in_screen.dart';
+import 'package:linux_pagm/Screens/signing_in_screen.dart';
 import 'BLoC/Blocs/sign_in_bloc.dart';
 import 'Resources/theme.dart';
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       home: BlocProvider(
         create: (context) => SignInBloc(),
-        child: SignInScreen(),
+        child: SigningInScreen(),
       ),
     );
   }

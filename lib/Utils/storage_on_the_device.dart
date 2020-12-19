@@ -15,4 +15,11 @@ class StorageOnTheDevice{
     String token = _shared_preferences.getString(key);
     return (token != null)? token : "";
   }
+
+  Future<bool> removeToken(String key) async{
+    bool token_is_deleted = false;
+    _shared_preferences = await SharedPreferences.getInstance();
+    await _shared_preferences.remove(key).then((isDeleted) => token_is_deleted = isDeleted);
+    return token_is_deleted;
+  }
 }

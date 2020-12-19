@@ -4,8 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:linux_pagm/BLoC/Blocs/sign_in_bloc.dart';
 import 'package:linux_pagm/BLoC/Cubits/password_obscure_text.dart';
-import 'package:linux_pagm/BLoC/Cubits/token_checking_and_refreshing.dart';
+import 'package:linux_pagm/BLoC/Cubits/token_checking.dart';
+import 'package:linux_pagm/BLoC/Enums/cheking_token_and_signing_out_operations.dart';
 import 'package:linux_pagm/BLoC/Enums/error_type.dart';
+import 'package:linux_pagm/BLoC/Enums/signing_button_type.dart';
 import 'package:linux_pagm/Models/user.dart';
 import 'package:linux_pagm/Resources/string.dart';
 import 'package:linux_pagm/Resources/theme.dart';
@@ -14,12 +16,12 @@ import 'package:linux_pagm/Screens/home.dart';
 import 'package:linux_pagm/SingIn/user_event.dart';
 import 'package:linux_pagm/SingIn/user_state.dart';
 
-class SignInScreen extends StatefulWidget {
+class SigningInScreen extends StatefulWidget {
   @override
-  _SignInScreenState createState() => _SignInScreenState();
+  _SigningInScreenState createState() => _SigningInScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SigningInScreenState extends State<SigningInScreen> {
   TextEditingController _email = new TextEditingController();
   TextEditingController _password = new TextEditingController();
   final passwordObscureText = PasswordObscureText(true);
@@ -30,9 +32,9 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       backgroundColor: blueNight,
       body: Center(
-        child: BlocBuilder<TokenCheckingAndRefreshing, UserState>(
-          cubit: TokenCheckingAndRefreshing(refreshingAccessTokenKey)
-            ..checkingAndRefreshingToken(),
+        child: BlocBuilder<TokenCheckingAndSingOut, UserState>(
+          cubit: TokenCheckingAndSingOut(
+              operation: ChekingTokenAndSigningOutOperations.chekingToken),
           builder: (context, state) {
             if (state is UserInitial) {
               return CircularProgressIndicator(
@@ -56,11 +58,15 @@ class _SignInScreenState extends State<SignInScreen> {
                     SizedBox(
                       height: 20.0,
                     ),
-                    _signInButton(true , state.user),
+                    _signingButton(SigningButtonType.starting, state.user),
+                    SizedBox(
+                      height: 20.0,
+                    ),
+                    _signingButton(SigningButtonType.signingOut, state.user),
                   ],
                 ),
               );
-            } else if (state is UserFailure){
+            } else if (state is UserFailure) {
               return Container(
                 height: 500.0,
                 width: 500.0,
@@ -93,7 +99,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             backgroundColor: red,
                           );
                         } else if (state is UserSuccess) {
-                          return _signInButton(true, state.user);
+                          return _signingButton(
+                              SigningButtonType.starting, state.user);
                         } else if (state is UserFailure) {
                           switch (state.error) {
                             case ErrorType.connection:
@@ -110,7 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                       onPressed: () {
                                         context.read<SignInBloc>().add(
-                                              UserSignIn(
+                                              UserSigningIn(
                                                 inputs: {
                                                   "username": _email.text,
                                                   "password": _password.text
@@ -137,7 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                       onPressed: () {
                                         context.read<SignInBloc>().add(
-                                              UserSignIn(
+                                              UserSigningIn(
                                                 inputs: {
                                                   "username": _email.text,
                                                   "password": _password.text
@@ -164,7 +171,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       ),
                                       onPressed: () {
                                         context.read<SignInBloc>().add(
-                                              UserSignIn(
+                                              UserSigningIn(
                                                 inputs: {
                                                   "username": _email.text,
                                                   "password": _password.text
@@ -178,7 +185,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               }
                           }
                         } else {
-                          return _signInButton(false);
+                          return _signingButton(SigningButtonType.signingIn);
                         }
                       },
                     ),
@@ -293,7 +300,7 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget _signInButton(bool onSignedIn, [User user]) {
+  Widget _signingButton(SigningButtonType signingButtonType, [User user]) {
     return Container(
       width: 250.0,
       child: FlatButton(
@@ -305,61 +312,81 @@ class _SignInScreenState extends State<SignInScreen> {
           padding: EdgeInsets.all(10.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: (onSignedIn)
-                ? [
-                    Text(
-                      "Sta",
-                      style: TextStyle(
-                          color: white,
-                          fontSize: 18,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    Text(
-                      "rt",
-                      style: TextStyle(
-                          color: red,
-                          fontSize: 18,
-                          fontStyle: FontStyle.italic),
-                    ),
-                  ]
-                : [
-                    Text(
-                      "Sign",
-                      style: TextStyle(
-                          color: white,
-                          fontSize: 18,
-                          fontStyle: FontStyle.italic),
-                    ),
-                    Text(
-                      "In",
-                      style: TextStyle(
-                          color: red,
-                          fontSize: 18,
-                          fontStyle: FontStyle.italic),
-                    ),
-                  ],
+            children: _sigingButtonTitle(signingButtonType),
           ),
         ),
         onPressed: () {
-          if (onSignedIn) {
+          if (signingButtonType == SigningButtonType.starting) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => Home(user),
               ),
             );
-          } else {
+          } else if (signingButtonType == SigningButtonType.signingIn) {
             context.read<SignInBloc>().add(
-                  UserSignIn(
+                  UserSigningIn(
                     inputs: {
                       "username": _email.text,
                       "password": _password.text
                     },
                   ),
                 );
+          } else {
+            setState(() {
+              TokenCheckingAndSingOut(
+                  operation: ChekingTokenAndSigningOutOperations.siginingOut,
+                  event: UserSigningOut(
+                      user: user,
+                      keys: [refreshingAccessTokenKey, accessTokenKey]))
+                ..close();
+            });
           }
         },
       ),
     );
+  }
+
+  List<Widget> _sigingButtonTitle(SigningButtonType signingButtonType) {
+    if (signingButtonType == SigningButtonType.starting) {
+      return [
+        Text(
+          "Sta",
+          style: TextStyle(
+              color: white, fontSize: 18, fontStyle: FontStyle.italic),
+        ),
+        Text(
+          "rt",
+          style:
+              TextStyle(color: red, fontSize: 18, fontStyle: FontStyle.italic),
+        ),
+      ];
+    } else if (signingButtonType == SigningButtonType.signingIn) {
+      return [
+        Text(
+          "Sign",
+          style: TextStyle(
+              color: white, fontSize: 18, fontStyle: FontStyle.italic),
+        ),
+        Text(
+          "In",
+          style:
+              TextStyle(color: red, fontSize: 18, fontStyle: FontStyle.italic),
+        ),
+      ];
+    } else {
+      return [
+        Text(
+          "Sign",
+          style: TextStyle(
+              color: white, fontSize: 18, fontStyle: FontStyle.italic),
+        ),
+        Text(
+          "Out",
+          style:
+              TextStyle(color: red, fontSize: 18, fontStyle: FontStyle.italic),
+        ),
+      ];
+    }
   }
 }

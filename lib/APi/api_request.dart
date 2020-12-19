@@ -13,7 +13,7 @@ Future<Map<String , dynamic>> post(String url , Map<String , dynamic> body , [bo
         //The account's access token
         "Authorization": "Bearer $token",
       } : null ,
-      body: jsonEncode(body),
+      body: body,
     );
 
     if(response.statusCode == 200){

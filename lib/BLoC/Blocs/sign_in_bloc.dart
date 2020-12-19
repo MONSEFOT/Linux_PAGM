@@ -17,46 +17,42 @@ class SignInBloc extends Bloc<UserEvent, UserState> {
   Stream<UserState> mapEventToState(UserEvent event) async* {
     //when the operation is a sign in and the requirements are not null
     //the operation will start afterthat the stream will return a User Object
-    if (event is UserSignIn && event.inputs.isNotEmpty) {
+    if (event is UserSigningIn && event.inputs.isNotEmpty) {
       try {
-
         //intialization state
         yield UserInitial();
 
-        //sing in proccess 
-        User user = await _signIn(event.inputs["username"], event.inputs["password"]);
+        //sing in proccess
+        User user = await _signingIn(event.inputs["username"], event.inputs["password"]);
 
-        
         //yield UserSuccess(user: user, userNotFound: false);
         //this function will run before the returning for passing data to Home screen
         if (user != null) {
           //saving the access token refresh
-          StorageOnTheDevice().saveRefreshToken(refreshingAccessTokenKey, user.refresh_token);
+          StorageOnTheDevice()
+              .saveRefreshToken(refreshingAccessTokenKey, user.refresh_token);
           //saving the access token
           StorageOnTheDevice().saveRefreshToken(accessTokenKey, user.token);
-          //saving the access token type
-          StorageOnTheDevice().saveRefreshToken(tokenTypeKey, user.token_type);
-          
           yield UserSuccess(user: user);
           return;
-        }else{
+        } else {
           yield UserFailure(error: ErrorType.userInformations);
           return;
         }
       } on ConnectionState {
         yield UserFailure(error: ErrorType.connection);
-        return; 
+        return;
       } catch (error) {
         //if that is a problem in the operation the stream witl return a UserFailure as an error
         yield UserFailure(error: ErrorType.otherProblem);
         return;
       }
-    }
+    } 
   }
 }
 
 //the sign in methode here is just with email and password
-Future<User> _signIn(String email, String password) async {
+Future<User> _signingIn(String email, String password) async {
   var body = ApiURLs().auth0_body;
 
   body["username"] = email;
@@ -71,4 +67,5 @@ Future<User> _signIn(String email, String password) async {
         refresh_token: response[refreshingAccessTokenKey]);
   }
 }
+
 

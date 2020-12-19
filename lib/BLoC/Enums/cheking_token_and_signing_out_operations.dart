@@ -1,0 +1,4 @@
+enum ChekingTokenAndSigningOutOperations{
+  chekingToken,
+  siginingOut,
+}
