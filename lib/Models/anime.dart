@@ -1,14 +1,11 @@
-
-class Anime {
+class AnimeForList{
   int id;
   String title;
+  String coverImage;
+  String posterImage;
+  int episodeCount;
+  String status;
+  String averageRating;
 
-  Anime({this.id , this.title});
-
-  Anime.fromJson(Map<String, dynamic> json) {
-    Anime(
-      id : json["id"],
-      title : json["title"],
-    );
-  }
+  AnimeForList({this.id , this.title , this.coverImage , this.posterImage , this.episodeCount , this.status , this.averageRating});
 }

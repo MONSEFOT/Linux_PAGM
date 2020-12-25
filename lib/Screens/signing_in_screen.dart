@@ -2,7 +2,8 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:linux_pagm/BLoC/Blocs/sign_in_bloc.dart';
+import 'package:linux_pagm/BLoC/Blocs/anime_bloc.dart';
+import 'package:linux_pagm/BLoC/Blocs/signing_in_bloc.dart';
 import 'package:linux_pagm/BLoC/Cubits/password_obscure_text.dart';
 import 'package:linux_pagm/BLoC/Cubits/token_checking.dart';
 import 'package:linux_pagm/BLoC/Enums/cheking_token_and_signing_out_operations.dart';
@@ -320,7 +321,10 @@ class _SigningInScreenState extends State<SigningInScreen> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Home(user),
+                builder: (context) => BlocProvider(
+                  create: (context) => AnimeBloc(),
+                  child: Home(),
+                ),
               ),
             );
           } else if (signingButtonType == SigningButtonType.signingIn) {

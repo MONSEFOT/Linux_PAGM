@@ -1,0 +1,15 @@
+enum AnimeCategories{
+  action,
+  horror,
+  drama,
+  ecchi,
+  comedy,
+  fantasy,
+  romance,
+  harem,
+  isekai,
+  yaoi,
+  yuri,
+  supernatural,
+  thriller,
+}

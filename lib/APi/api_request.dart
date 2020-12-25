@@ -8,12 +8,12 @@ Future<Map<String , dynamic>> post(String url , Map<String , dynamic> body , [bo
     final response = await http.post(
       Uri.encodeFull(url),
       headers : (authorization)? <String , String>{
-        "Accept": "application/json",
-        "Content-Type" : "application/json",
+        "Accept": "application/vnd.api+json",
+        "Content-Type" : "application/vnd.api+json",
         //The account's access token
         "Authorization": "Bearer $token",
       } : null ,
-      body: body,
+      body: (authorization) ? jsonEncode(body) : body,
     );
 
     if(response.statusCode == 200){
@@ -27,8 +27,8 @@ Future<Map<String , dynamic>> post(String url , Map<String , dynamic> body , [bo
     final response = await http.get(
       Uri.encodeFull(url),
       headers : (authorization)? <String , String>{
-        "Accept": "application/json",
-        "Content-Type" : "application/json",
+        "Accept": "application/vnd.api+json",
+        "Content-Type" : "application/vnd.api+json",
         //The account's access token
         "Authorization": "Bearer $token",
       } : null ,
