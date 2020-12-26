@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   final _scrollController = ScrollController();
   final _scrollThreshold = 200.0;
   AnimeBloc _animeBloc;
+  AnimeEvent _animeEvent;
 
   @override
   void initState() {
@@ -41,23 +42,23 @@ class _HomeState extends State<Home> {
                 backgroundColor: red,
               );
             } else if (state is AnimeSuccess) {
+              _animeEvent = AnimeFetching(currentState: state);
               return ListView.builder(
                 controller: _scrollController,
-
                 //here when the index will be the last the length of the list will be incremented with 1
-                //the incremented index will be the circular progress indicator like in the code bellow 
+                //the incremented index will be the circular progress indicator like in the code bellow
                 itemCount: (state.hasReachedMax)
                     ? state.animes.length
                     : state.animes.length + 1,
                 itemBuilder: (context, index) {
                   return (index >= state.animes.length)
                       ? Column(
-                        children: [
-                          CircularProgressIndicator(
+                          children: [
+                            CircularProgressIndicator(
                               backgroundColor: red,
                             ),
-                        ],
-                      )
+                          ],
+                        )
                       : animeForListBuilder(state.animes[index]);
                 },
               );
@@ -101,25 +102,27 @@ class _HomeState extends State<Home> {
               )
             : null,
       ),
-      child:
-          //poster image
-          Container(
+      child: Container(
         child: Row(
           children: [
             Container(
               padding: EdgeInsets.all(10.0),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(15.0),
-                child: CachedNetworkImage(
-                  imageUrl: anime.posterImage,
-                  placeholder: (context, url) => CircularProgressIndicator(
-                    backgroundColor: red,
-                  ),
+                child: Image.network(
+                  anime.posterImage,
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Center(
+                      child: CircularProgressIndicator(
+                        backgroundColor: red,
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
             Container(
-
               //Anime's Info
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,7 +194,7 @@ class _HomeState extends State<Home> {
     final maxScroll = _scrollController.position.maxScrollExtent;
     final currentScroll = _scrollController.position.pixels;
     if (maxScroll - currentScroll <= _scrollThreshold) {
-      _animeBloc..add(AnimeFetched());
+      _animeBloc..add(_animeEvent);
     }
   }
 

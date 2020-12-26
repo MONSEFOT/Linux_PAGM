@@ -1,5 +1,5 @@
 enum AnimeFilteringType{
-  year,
-  categories,
   text,
+  categories,
+  year,
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:linux_pagm/Anime/anime_event.dart';
+import 'package:linux_pagm/Anime/anime_state.dart';
 import 'package:linux_pagm/BLoC/Blocs/anime_bloc.dart';
 import 'package:linux_pagm/Screens/home.dart';
 import 'package:window_size/window_size.dart';
@@ -28,8 +29,8 @@ class MyApp extends StatelessWidget {
         accentColor: white,
       ),
       title: 'Flutter Demo',
-      home: BlocProvider(
-        create: (context) => AnimeBloc()..add(AnimeFetched()),
+      home:BlocProvider(
+        create: (context) => AnimeBloc()..add(AnimeFetching(currentState: AnimeInitial())),
         child: Home(),
       ),
     );
