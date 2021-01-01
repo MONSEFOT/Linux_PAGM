@@ -2,20 +2,18 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:linux_pagm/Anime/anime_event.dart';
-import 'package:linux_pagm/Anime/anime_state.dart';
-import 'package:linux_pagm/BLoC/Blocs/anime_bloc.dart';
+import 'package:linux_pagm/BLoC/Blocs/Anime/anime_bloc.dart';
 import 'package:linux_pagm/Screens/home.dart';
 import 'package:window_size/window_size.dart';
 import 'Resources/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  /*if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     setWindowTitle('PAGM');
     setWindowMinSize(const Size(1000, 800));
     setWindowMaxSize(const Size(1000, 800));
-  }
+  }*/
   runApp(MyApp());
 }
 
@@ -27,10 +25,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         appBarTheme: appBarTheme,
         accentColor: white,
+        primaryColor: blueNight,
       ),
       title: 'Flutter Demo',
       home:BlocProvider(
-        create: (context) => AnimeBloc()..add(AnimeFetching(currentState: AnimeInitial())),
+        create: (context) => AnimeBloc(),
         child: Home(),
       ),
     );

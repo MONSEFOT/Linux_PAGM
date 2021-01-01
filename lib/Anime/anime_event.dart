@@ -12,6 +12,15 @@ class AnimeFetching extends AnimeEvent {
   AnimeFetching({this.currentState});
 }
 
-class AnimeFetchingByFiltering extends AnimeEvent{
-  AnimeFetchingByFiltering({t});
+class AnimeFetchingBySearching extends AnimeEvent{
+  final AnimeState currentState;
+  String searchingText;
+  
+  AnimeFetchingBySearching({this.currentState , this.searchingText});
+}
+
+class AnimeFetchingToDisplay extends AnimeEvent{
+  final int animeId;
+
+  AnimeFetchingToDisplay({this.animeId});
 }

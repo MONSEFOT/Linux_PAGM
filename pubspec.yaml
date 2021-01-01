@@ -33,6 +33,7 @@ dependencies:
   equatable:
   shared_preferences:
   cached_network_image:
+  flutter_spinkit:
   window_size:
     git:
       url: git://github.com/google/flutter-desktop-embedding.git
