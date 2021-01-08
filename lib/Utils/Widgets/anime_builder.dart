@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:linux_pagm/Anime/anime_event.dart';
@@ -17,7 +19,7 @@ Widget animeForListBuilder(BuildContext context, AnimeForList anime) {
             ..add(
               AnimeFetchingToDisplay(animeId: anime.id),
             ),
-            child: AnimeDisplaying(),
+          child: AnimeDisplaying(),
         ),
       ),
     ),
@@ -124,26 +126,18 @@ Widget animeForListBuilder(BuildContext context, AnimeForList anime) {
 }
 
 Widget animeForDisplayingBuilder(AnimeForDisplaying anime) {
-  return Container(
-    decoration: BoxDecoration(
-      //anime covert image
-      image: (anime.coverImage != null)
-          ? DecorationImage(
-              image: Image.network(anime.coverImage).image,
-              fit: BoxFit.cover,
-              colorFilter: new ColorFilter.mode(
-                  Colors.black.withOpacity(0.2), BlendMode.dstATop),
-            )
-          : null,
-    ),
-    child: Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(15.0),
+  return ListView(
+    children: [
+      Container(
+        margin: EdgeInsets.all(10.0),
+        color: black,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 500.0,
+              width: 300.0,
+              padding: EdgeInsets.all(10.0),
               child: Image.network(
                 anime.posterImage,
                 loadingBuilder: (BuildContext context, Widget child,
@@ -157,16 +151,163 @@ Widget animeForDisplayingBuilder(AnimeForDisplaying anime) {
                 },
               ),
             ),
-          ),
-          Container(
-            child: Text(
-              (anime.title != null) ? anime.title : "",
-              style: itemOfAnimeListTitle,
-              textDirection: TextDirection.ltr,
+            Expanded(
+              child: Container(
+                padding: EdgeInsets.all(10.0),
+                child: Table(
+                  border: TableBorder.all(width: 3.0, color: blueNight),
+                  children: [
+                    TableRow(
+                      children: [
+                        TableCell(
+                          child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                title,
+                                style: itemOfAnimeListTitle,
+                              )),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              anime.title,
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 25,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        TableCell(
+                          child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                ageRatingGuide,
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                        TableCell(
+                          child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                anime.ageRatingGuide,
+                                style: TextStyle(
+                                  color: red,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        TableCell(
+                          child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                status,
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              anime.status,
+                              style: TextStyle(
+                                color: (anime.status == "finished")
+                                    ? red
+                                    : green,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        TableCell(
+                          child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                episodeCount,
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              (anime.episodeCount == null)
+                                  ? "Unfound"
+                                  : "${anime.episodeCount}",
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    TableRow(
+                      children: [
+                        TableCell(
+                          child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                story,
+                                style: TextStyle(
+                                  color: white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )),
+                        ),
+                        TableCell(
+                          child: Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: Text(
+                              anime.description,
+                              style: TextStyle(
+                                color: white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
+    ],
   );
 }

@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,11 +10,10 @@ import 'Resources/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  /*if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
     setWindowTitle('PAGM');
-    setWindowMinSize(const Size(1000, 800));
-    setWindowMaxSize(const Size(1000, 800));
-  }*/
+    setWindowMinSize(Size(1000, 800));
+  }
   runApp(MyApp());
 }
 
@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
         accentColor: white,
         primaryColor: blueNight,
       ),
-      title: 'Flutter Demo',
+      title: 'PAGM',
       home:BlocProvider(
         create: (context) => AnimeBloc(),
         child: Home(),

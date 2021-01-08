@@ -44,21 +44,19 @@ class _AnimeDisplayingState extends State<AnimeDisplaying> {
           ],
         ),
       ),
-      body: Center(
-        child: BlocBuilder<AnimeBloc, AnimeState>(
-          builder: (context, state) {
-            if (state is AnimeInitial) {
-              return SpinKitRotatingCircle(
-                color: red,
-                size: 50.0,
-              );
-            } else if (state is AnimeFilteredSuccessToDisplaying) {
-              return animeForDisplayingBuilder(state.anime);
-            } else {
-              return errorDisplaying("Anime Not found !!");
-            }
-          },
-        ),
+      body: BlocBuilder<AnimeBloc, AnimeState>(
+        builder: (context, state) {
+          if (state is AnimeInitial) {
+            return SpinKitRotatingCircle(
+              color: red,
+              size: 50.0,
+            );
+          } else if (state is AnimeFilteredSuccessToDisplaying) {
+            return animeForDisplayingBuilder(state.anime);
+          } else {
+            return errorDisplaying("Anime Not found !!");
+          }
+        },
       ),
     );
   }

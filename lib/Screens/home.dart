@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -8,6 +9,9 @@ import 'package:linux_pagm/Resources/theme.dart';
 import 'package:linux_pagm/Screens/Errors/error.dart';
 import 'package:linux_pagm/Screens/Anime/searching_screen.dart';
 import 'package:linux_pagm/Utils/Widgets/anime_builder.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:linux_pagm/Resources/string.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -104,7 +108,8 @@ class _HomeState extends State<Home> {
                                     ),
                                   ],
                                 )
-                              : animeForListBuilder(context , state.animes[index]);
+                              : animeForListBuilder(
+                                  context, state.animes[index]);
                         },
                       );
                     } else {
@@ -118,38 +123,19 @@ class _HomeState extends State<Home> {
           ),
         ),
       ),
-      bottomNavigationBar: buttomActionBar(),
-    );
-  }
-
-  Widget buttomActionBar() {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        
-      ),
-      child: BottomNavigationBarTheme(
-        data: BottomNavigationBarThemeData(
-          backgroundColor: black,
-          selectedItemColor: red,
-          unselectedItemColor: white,
-          type: BottomNavigationBarType.fixed,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
         ),
-        child: BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.play_arrow),
-              label: "Anime",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.import_contacts),
-              label: "Manga",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              label: "Profile",
-            ),
-          ],
-        ),
+        child: Icon(MdiIcons.github , color: white,),
+        onPressed: () async {
+          if (await canLaunch(githubRepositoryUrl)) {
+            await launch(githubRepositoryUrl);
+          } else {
+            throw 'Could not launch $githubRepositoryUrl';
+          }
+        },
       ),
     );
   }
